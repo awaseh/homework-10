@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Post</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Delete Post</h1>
+        <div id="post-details"></div>
+        <button id="delete-button" class="button">Confirm Delete</button>
+        <a href="/posts" class="button">Cancel</a>
+    </div>
+    <script>
+        $(document).ready(function() {
+            const postId = window.location.pathname.split('/').pop();
+            
+            // Load post details
+            $.ajax({
+                url: `http://localhost:8888/api/posts/${postId}`,
+                method: 'GET',
+                success: function(post) {
+                    $('#post-details').html(`
+                        <h2>${post[0].title}</h2>
+                        <p>${post[0].content}</p>
+                    `);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            $('#delete-button').click(function() {
+                $.ajax({
+                    url: `http://localhost:8888/api/posts/${postId}`,
+                    method: 'DELETE',
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = '/posts';
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

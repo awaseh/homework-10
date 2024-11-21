@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Posts</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Posts</h1>
+        <a href="/posts-add" class="button">Add New Post</a>
+        <div id="posts-list"></div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: 'http://localhost:8888/api/posts',
+                method: 'GET',
+                success: function(posts) {
+                    const postsList = $('#posts-list');
+                    posts.forEach(post => {
+                        postsList.append(`
+                            <div class="post-item">
+                                <h2>${post.title}</h2>
+                                <p>${post.content}</p>
+                                <div class="actions">
+                                    <a href="/posts-update/${post.id}" class="button">Edit</a>
+                                    <a href="/posts-delete/${post.id}" class="button">Delete</a>
+                                </div>
+                            </div>
+                        `);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
